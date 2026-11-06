@@ -1,0 +1,637 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(
+        135deg,
+        #18001f,
+        #3b082f,
+        #120018
+    );
+
+    overflow: hidden;
+}
+
+/* =========================================
+   AMBIENT BACKGROUND GLOW
+   ========================================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: -20%;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 77, 141, 0.12),
+            transparent 45%
+        );
+
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* =========================================
+   MAIN SCREEN
+   ========================================= */
+
+.container {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+
+/* Heart above the question */
+.heart {
+    font-size: 120px;
+    margin-bottom: 15px;
+
+    filter:
+        drop-shadow(0 0 10px #ff4d8d)
+        drop-shadow(0 0 25px #ff4d8d);
+
+    animation:
+        heartbeat 1.5s ease-in-out infinite;
+}
+
+
+/* Main question */
+h1 {
+    color: white;
+    font-size: 80px;
+    margin-bottom: 45px;
+
+    transform: translateY(-25px);
+
+    text-shadow:
+        0 0 10px #ff4d8d,
+        0 0 25px #ff4d8d,
+        0 0 45px rgba(255, 77, 141, 0.5);
+}
+
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+
+button {
+    border: none;
+    padding: 16px 35px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    border-radius: 50px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+button:hover {
+    transform: scale(1.08);
+}
+
+
+/* YES button */
+.yes {
+    color: white;
+
+    background: #00d084;
+
+    box-shadow:
+        0 0 10px #00d084,
+        0 0 25px #00d084;
+}
+
+
+.yes:hover {
+    box-shadow:
+        0 0 15px #00d084,
+        0 0 35px #00d084,
+        0 0 60px rgba(0, 208, 132, 0.5);
+}
+
+
+/* NO button */
+.no {
+    position: relative;
+    color: white;
+
+    background: #ff3158;
+
+    box-shadow:
+        0 0 10px #ff3158,
+        0 0 25px #ff3158;
+}
+
+
+.no:hover {
+    box-shadow:
+        0 0 15px #ff3158,
+        0 0 35px #ff3158;
+}
+
+
+/* =========================================
+   FLOATING HEARTS
+   ========================================= */
+
+.floating-heart {
+    position: absolute;
+
+    color: #ff4d8d;
+
+    font-size: 25px;
+
+    opacity: 0;
+
+    filter:
+        drop-shadow(0 0 5px #ff4d8d)
+        drop-shadow(0 0 12px rgba(255, 77, 141, 0.6));
+
+    animation:
+        float 6s linear infinite;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   HEARTBEAT
+   ========================================= */
+
+@keyframes heartbeat {
+
+    0%, 100% {
+        transform:
+            translateY(-25px)
+            scale(1);
+    }
+
+    25% {
+        transform:
+            translateY(-25px)
+            scale(1.08);
+    }
+
+    50% {
+        transform:
+            translateY(-25px)
+            scale(1.2);
+    }
+
+    75% {
+        transform:
+            translateY(-25px)
+            scale(1.08);
+    }
+}
+
+
+/* =========================================
+   FLOATING HEART ANIMATION
+   ========================================= */
+
+@keyframes float {
+
+    0% {
+        transform:
+            translateY(100vh)
+            scale(0.7);
+
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.5;
+    }
+
+    50% {
+        transform:
+            translateY(40vh)
+            scale(1);
+    }
+
+    80% {
+        opacity: 0.5;
+    }
+
+    100% {
+        transform:
+            translateY(-20vh)
+            scale(0.8);
+
+        opacity: 0;
+    }
+}
+
+
+/* =========================================
+   CINEMATIC VIDEO REVEAL
+   ========================================= */
+
+.video-container {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #000;
+
+    opacity: 0;
+    visibility: hidden;
+
+    /*
+       Slightly longer transition creates
+       a more cinematic fade.
+    */
+    transition:
+        opacity 1.5s ease,
+        visibility 1.5s ease;
+
+    z-index: 10;
+
+    overflow: hidden;
+}
+
+
+/*
+   Dark cinematic layer around the video
+*/
+.video-container::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 45%,
+            rgba(0, 0, 0, 0.55) 100%
+        );
+
+    opacity: 0;
+
+    transition:
+        opacity 2s ease;
+}
+
+
+/*
+   Video becomes visible
+*/
+.video-container.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/*
+   Activate cinematic vignette
+*/
+.video-container.show::after {
+    opacity: 1;
+}
+
+
+/* =========================================
+   VIDEO ITSELF
+   ========================================= */
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    /*
+       Start slightly smaller and darker.
+    */
+    transform:
+        scale(0.92);
+
+    opacity: 0;
+
+    filter:
+        brightness(0.75)
+        contrast(1.05);
+
+    transition:
+        transform 1.8s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 1.8s ease,
+        filter 2s ease;
+}
+
+
+/*
+   Cinematic video reveal
+*/
+.video-container.show video {
+    transform:
+        scale(1);
+
+    opacity: 1;
+
+    filter:
+        brightness(1)
+        contrast(1.05);
+}
+
+
+/* =========================================
+   PHONE SCREEN ADJUSTMENT
+   ========================================= */
+
+@media (max-width: 500px) {
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .heart {
+        font-size: 90px;
+    }
+
+    button {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+
+    .buttons {
+        gap: 15px;
+    }
+}
+/* =========================================
+   YES BUTTON HEART BURST
+   ========================================= */
+
+.heart-burst {
+    position: fixed;
+
+    pointer-events: none;
+
+    font-size: 24px;
+
+    color: #ff4d8d;
+
+    z-index: 20;
+
+    opacity: 0;
+
+    filter:
+        drop-shadow(0 0 6px #ff4d8d)
+        drop-shadow(0 0 15px #ff4d8d);
+
+    animation: heartBurst 0.9s ease-out forwards;
+}
+
+
+@keyframes heartBurst {
+
+    0% {
+        transform:
+            translate(-50%, -50%)
+            scale(0.3)
+            rotate(0deg);
+
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 1;
+    }
+
+    100% {
+        transform:
+            translate(
+                calc(-50% + var(--x)),
+                calc(-50% + var(--y))
+            )
+            scale(1.2)
+            rotate(var(--rotation));
+
+        opacity: 0;
+    }
+}
+
+/* =========================================
+   FINAL ROMANTIC MESSAGE
+   ========================================= */
+
+.final-message {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 77, 141, 0.12),
+            rgba(0, 0, 0, 0.82)
+        );
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: scale(1.04);
+
+    transition:
+        opacity 1.5s ease,
+        visibility 1.5s ease,
+        transform 1.5s ease;
+
+    z-index: 5;
+}
+
+
+/* Message becomes visible */
+.video-container.finished .final-message {
+    opacity: 1;
+    visibility: visible;
+
+    transform: scale(1);
+}
+
+
+/* Romantic text */
+.final-message p {
+    max-width: 650px;
+
+    color: white;
+
+    font-size: 32px;
+    line-height: 1.5;
+
+    font-weight: 500;
+
+    text-shadow:
+        0 0 10px #ff4d8d,
+        0 0 25px #ff4d8d,
+        0 0 45px rgba(255, 77, 141, 0.5);
+
+    margin-bottom: 40px;
+}
+
+
+/* -------------------------
+   NEON EXPERIENCE AGAIN BUTTON
+------------------------- */
+
+.replay {
+    color: #ffffff;
+    background: rgba(255, 20, 147, 0.12);
+
+    border: 2px solid #ff1493;
+    padding: 16px 34px;
+
+    font-size: 17px;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    border-radius: 50px;
+    cursor: pointer;
+
+    box-shadow:
+        0 0 8px #ff1493,
+        0 0 18px #ff1493,
+        0 0 35px rgba(255, 20, 147, 0.8),
+        inset 0 0 12px rgba(255, 20, 147, 0.25);
+
+    backdrop-filter: blur(8px);
+
+    opacity: 0;
+    transform: translateY(15px);
+
+    transition:
+        opacity 1s ease 0.7s,
+        transform 1s ease 0.7s,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+
+    animation: neonPulse 2s ease-in-out infinite;
+}
+
+.video-container.finished .replay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.replay:hover {
+    background: rgba(255, 20, 147, 0.3);
+
+    box-shadow:
+        0 0 10px #ff1493,
+        0 0 25px #ff1493,
+        0 0 50px #ff1493,
+        inset 0 0 18px rgba(255, 20, 147, 0.4);
+
+    transform: translateY(0) scale(1.08);
+}
+
+
+/* Neon breathing effect */
+
+@keyframes neonPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 8px #ff1493,
+            0 0 18px #ff1493,
+            0 0 35px rgba(255, 20, 147, 0.8),
+            inset 0 0 12px rgba(255, 20, 147, 0.25);
+    }
+
+    50% {
+        box-shadow:
+            0 0 12px #ff1493,
+            0 0 28px #ff1493,
+            0 0 55px rgba(255, 20, 147, 1),
+            inset 0 0 20px rgba(255, 20, 147, 0.4);
+    }
+}
+
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+    .replay {
+        padding: 15px 28px;
+        font-size: 15px;
+        letter-spacing: 0.8px;
+
+        border-width: 2px;
+
+        box-shadow:
+            0 0 8px #ff1493,
+            0 0 18px #ff1493,
+            0 0 32px rgba(255, 20, 147, 0.8);
+    }
+}
+
+/* =========================================
+   PHONE ADJUSTMENT
+   ========================================= */
+
+@media (max-width: 500px) {
+
+    .final-message p {
+        font-size: 23px;
+        line-height: 1.45;
+    }
+
+    .replay {
+        padding: 13px 24px;
+        font-size: 15px;
+    }
+}
+.no {
+    touch-action: manipulation;
+}
+
+@media (hover: none) {
+    .no:hover {
+        transform: none;
+    }
+}
